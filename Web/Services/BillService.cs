@@ -26,7 +26,7 @@ namespace Web.Services
             {
                 MaKH = request.MaKH,
                 NgayLap = DateTime.Now,
-                TongTien = request.TongTien
+                TongTien = 0
             };
             dBContext.HoaDon.Add(bill);
             await dBContext.SaveChangesAsync();

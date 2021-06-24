@@ -35,7 +35,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery]GetBillPagningRequest req)
         {
-            req.PageSize = 2;
+            req.PageSize = 20;
             Console.WriteLine(req.keyword);
             var bills = await billService.GetAllPagning(req);
             return View(bills);
@@ -64,7 +64,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ShowRevenue([FromQuery] GetBillPagningRequest request)
         {
-            request.PageSize = 2;
+            request.PageSize = 20;
             var bills = await billService.GetBillOfMonth(request);
             return View(bills);
         }
