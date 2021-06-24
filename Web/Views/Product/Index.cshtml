@@ -1,0 +1,153 @@
+﻿@using Web.DTO;
+@model PagedViewModel<Web.Services.Product.DTO.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Danh sách hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Danh sách hóa đơn</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Danh sách hóa đơn</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            <a class="btn btn-success" asp-action="CreateBill" asp-controller="Bill">Tạo mới hóa đơn</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                Mã SP
+                            </th>
+                            <th>
+                                Tên SP
+                            </th>
+                            <th>
+                                Số lượng tồn
+                            </th>
+                            <th>
+                                Mô tả
+                            </th>
+                            <th>
+                                Giá
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTable">
+                        @foreach (var item in Model.Items)
+                        {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaSP)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TenSP)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SoLuongTon)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Mota)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Gia)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.MaSP">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.MaSP">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.MaSP">Delete</a>
+                            </td>
+                            <td>
+                                <button id ="addProductsToCard" class="btn btn-success" onclick="getInfoProduct(this)">Thêm sản phẩm</button>
+                            </td>
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            @await Component.InvokeAsync("Pager", Model)
+
+        </div>
+    </div>
+</div>
+<script>
+    function CreerObject(id, name, count, des, price, soluong) {
+        var product = new Object();
+        product.MaSP = id.trim();
+        product.TenSP = name.trim();
+        product.SoLuongTon = count.trim();
+        product.Mota = des.trim();
+        product.Gia = price.trim();
+        product.SoLuong = soluong;
+        return product;
+    }
+    var list_product = JSON.parse(localStorage.getItem('list_product'))
+    if (list_product == null)
+        list_product = []
+   
+
+    function CheckObjectInArr(arr, object) {
+        var dem = 0;
+        for (items of arr) {
+            if (items.MaSP == object.MaSP) {
+                dem++;
+            }
+        }
+        if (dem == 0) {
+            return true;
+        }
+        else
+            return false;
+    }
+    function getInfoProduct(x) {
+        var info = x.parentNode.parentNode;
+        console.log(info)
+        id, name, count, des, price
+        var info = x.parentNode.parentNode;
+        var id = info.children[0].innerHTML;
+        var name = info.children[1].innerHTML;
+        var count = info.children[2].innerHTML;
+        var des = info.children[3].innerHTML;
+        var price = info.children[4].innerHTML
+        var product = CreerObject(id, name, count, des, price, 1)
+
+        var list_product = JSON.parse(localStorage.getItem('list_product'))
+        if (list_product == null)
+            list_product = []
+
+        if (list_product.length == 0) {
+            list_product.push(product)
+            list_product[0].SoLuong = 1;
+            alert('Sản phẩm đã được thêm vào hóa đơn')
+        }
+        else {
+            for (var i = 0; i < list_product.length; i++) {
+                
+                if (list_product[i].MaSP == product.MaSP) {
+                    alert('Sản phẩm đã được thêm vào hóa đơn')
+                }
+                else if (CheckObjectInArr(list_product, product) == true) {
+                    list_product.push(product);
+                    alert('Thêm sản phẩm thành công!')
+                }
+            }
+            
+        }
+
+        var json_list_product = JSON.stringify(list_product)
+
+        localStorage.setItem('list_product', json_list_product)
+        
+    }
+</script>
+
+
+
+

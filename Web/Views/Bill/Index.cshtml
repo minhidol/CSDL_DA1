@@ -1,0 +1,70 @@
+﻿@using Web.DTO;
+@model PagedViewModel<Web.Services.Bill.DTO.BillViewModel>
+
+@{
+    ViewData["Title"] = "Danh sách hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Danh sách hóa đơn</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Danh sách hóa đơn</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            <a class="btn btn-success" asp-action="CreateBill" asp-controller="Bill">Tạo mới hóa đơn</a> 
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                MaKH
+                            </th>
+                            <th>
+                                Tổng tiền
+                            </th>
+                            <th>
+                                Ngày lập
+                            </th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MaKH)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TongTien)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NgayLap)
+                            </td>
+                           
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.MaHD">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.MaHD">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.MaHD">Delete</a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            @await Component.InvokeAsync("Pager", Model);
+
+        </div>
+    </div>
+
+</div>
+
+
+
+

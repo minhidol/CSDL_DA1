@@ -1,0 +1,103 @@
+﻿@using Web.DTO;
+@model PagedViewModel<Web.Services.Bill.DTO.BillViewModel>
+
+@{
+    ViewData["Title"] = "Danh sách hóa đơn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div id="showRevenue">
+    <div style="margin-left: 30px; margin-top: 30px">
+        <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style={'backgroup-color':'red}>
+                Chọn tháng
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="https://localhost:5001/bill/showrevenue?month=06&year=2021&pageIndex=1">06/2021</a></li>
+                <li><a class="dropdown-item" href="https://localhost:5001/bill/showrevenue?month=05&year=2021&pageIndex=1">05/2021</a></li>
+                <li><a class="dropdown-item" href="https://localhost:5001/bill/showrevenue?month=04&year=2021&pageIndex=1">04/2021</a></li>
+                <li><a class="dropdown-item" href="https://localhost:5001/bill/showrevenue?month=03&year=2021&pageIndex=1">03/2021</a></li>
+                <li><a class="dropdown-item" href="https://localhost:5001/bill/showrevenue?month=02&year=2021&pageIndex=1">02/2021</a></li>
+                <li><a class="dropdown-item" href="https://localhost:5001/bill/showrevenue?month=01&year=2021&pageIndex=1">01/2021</a></li>
+            </ul>
+        </div>
+        @{
+            decimal sum = 0;
+            String thang = "";
+            foreach (var item in Model.Items)
+            {
+                sum += item.TongTien;
+                thang = item.NgayLap.ToString("MM") + "/" + item.NgayLap.ToString("yyyy");
+            }
+           
+        }
+        @if (sum != 0)
+        {
+            <div style="margin-top: 20px; margin-left: 10px">
+                <h1 style="font-size: 1.9rem">Tổng doanh thu của @thang:    @sum</h1>
+            </div>
+        }
+
+    </div>
+</div>
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4" style="font-size: 1.3rem; margin-left: 20px">Danh sách hóa đơn</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item" style="margin-left: 20px"><a href="/">Trang chủ</a></li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                MaKH
+                            </th>
+                            <th>
+                                Tổng tiền
+                            </th>
+                            <th>
+                                Ngày lập
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MaKH)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TongTien)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NgayLap)
+                                </td>
+
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.MaHD">Edit</a> |
+                                    <a asp-action="Details" asp-route-id="@item.MaHD">Details</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.MaHD">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            @await Component.InvokeAsync("Pager", Model);
+
+        </div>
+    </div>
+
+</div>
+
+
+
